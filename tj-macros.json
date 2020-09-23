@@ -1,0 +1,69 @@
+{
+    "schema_version": 2,
+    "macros": [
+        {
+            "attributes": {
+                "action": "!tj -start",
+                "istokenaction": false,
+                "name": "TJ-Start",
+                "visibleto": ""
+            },
+            "macrobar": {
+                "color": null,
+                "name": null
+            }
+        },
+        {
+            "attributes": {
+                "action": "!tj -reset ?{round-start|1}",
+                "istokenaction": false,
+                "name": "TJ-Reset",
+                "visibleto": ""
+            },
+            "macrobar": {
+                "color": null,
+                "name": null
+            }
+        },
+        {
+            "attributes": {
+                "action": "!tj -addstatus ?{name}:?{duration}:?{direction}:?{message}",
+                "istokenaction": true,
+                "name": "TJ-AddStatus",
+                "visibleto": "all"
+            }
+        },
+        {
+            "attributes": {
+                "action": "!tj -edit",
+                "istokenaction": true,
+                "name": "TJ-EditStatus",
+                "visibleto": ""
+            }
+        },
+        {
+            "attributes": {
+                "action": "!tj -addfav ?{name}:?{duration}:?{direction}:?{message}",
+                "istokenaction": false,
+                "name": "TJ-AddFav",
+                "visibleto": ""
+            },
+            "macrobar": {
+                "color": null,
+                "name": null
+            }
+        },
+        {
+            "attributes": {
+                "action": "!tj -listfavs",
+                "istokenaction": false,
+                "name": "TJ-ListFavs",
+                "visibleto": ""
+            },
+            "macrobar": {
+                "color": null,
+                "name": null
+            }
+        }
+    ]
+}

@@ -1292,9 +1292,18 @@ var TrackerJacker = (function() {
 				currentTurn = turnorder[0];
 				updateTurnorderMarker(turnorder);
 			}
+log('if currentTurn.id && priororder[0].id');
+log('currentTurn.id');
+log(currentTurn.id);
+log('priororder');
+log(priororder);
 			if (currentTurn.id !== -1
 				&& priororder
 				&& priororder[0].id !== currentTurn.id) {
+log('currentTurn.id');
+log(currentTurn.id);
+log('priororder[0].id');
+log(priororder[0].id);
 					var graphic,
 						curToken = getObj('graphic',currentTurn.id),
 						priorToken = getObj('graphic',priororder[0].id),

@@ -1,0 +1,70 @@
+/*  You can paste this into a macro to create your favorites all in one go
+/   creating the favorite follows the following format
+/   !tj -addfav name:duration:direction:message
+/	name - the name of the favorite (will be lowercased, avoid :'s and %'s)
+/	duration - how many rounds the effect lasts normally (can be changed after assigned to a token)
+/	direction - should be one of -1 (counts down), +0 (infinite duration), +1 (counts up)
+/	
+/   adding the token marker to the favorite follows the following format
+/   !tj -marker roll20-token-name %% favorite-name %% fav
+/	roll20-token-name - the unique identifier roll20 uses for that token (you can view these in the API Output Console log when the script starts up
+/	favorite-name - the name of a previously created favorite
+*/
+
+!tj -addfav Blessed:10:-1:
+!tj -addfav Blinded:10:-1:
+!tj -addfav Charmed:10:-1:
+!tj -addfav Clone/Simulacrum:1:+0:
+!tj -addfav Confused:10:-1:
+!tj -addfav Cursed:1:+0:
+!tj -addfav Deafened:10:-1:
+!tj -addfav Diseased:1:+0:
+!tj -addfav Dying:1:+0:
+!tj -addfav Exhausted 1:1:+0:
+!tj -addfav Exhausted 2:1:+0:
+!tj -addfav Exhausted 3:1:+0:
+!tj -addfav Exhausted 4:1:+0:
+!tj -addfav Exhausted 5:1:+0:
+!tj -addfav Exhausted 6:1:+0:
+!tj -addfav Flying:1:+0:
+!tj -addfav Frightened:10:-1:
+!tj -addfav Grappled:1:+0:
+!tj -addfav Hasted:10:-1:
+!tj -addfav Hexed:1:+0:
+!tj -addfav Incapacitated:1:+0:
+!tj -addfav Inspired:1:+0:
+!tj -addfav Invisible:1:+0:
+!tj -addfav Knocked Out:1:+0:
+!tj -addfav Mage Armor:1:+0:
+!tj -addfav Marked:1:+0:
+!tj -addfav Max HP Down:1:+0:
+!tj -addfav Max HP Up:1:+0:
+!tj -addfav Mirror Image:10:-1:
+!tj -addfav Paralyzed:1:+0:
+!tj -addfav Petrified:1:+0:
+!tj -addfav Poisoned:1:+0:
+!tj -addfav Polymorphed:1:+0:
+!tj -addfav Prone:1:+0:
+!tj -addfav Protection vs Acid:10:-1:
+!tj -addfav Protection vs Bludgeoning:10:-1:
+!tj -addfav Protection vs Cold:10:-1:
+!tj -addfav Protection vs Electric:10:-1:
+!tj -addfav Protection vs Fire:10:-1:
+!tj -addfav Protection vs Force:10:-1:
+!tj -addfav Protection vs Necrotic:10:-1:
+!tj -addfav Protection vs Piercing:10:-1:
+!tj -addfav Protection vs Poison:10:-1:
+!tj -addfav Protection vs Psychic:10:-1:
+!tj -addfav Protection vs Radiant:10:-1:
+!tj -addfav Protection vs Slashing:10:-1:
+!tj -addfav Protection vs Thunder:10:-1:
+!tj -addfav Rage:10:-1:
+!tj -addfav Webbed:10:-1:
+!tj -addfav Sleeping:10:-1:
+!tj -addfav Slowed:10:-1:
+!tj -addfav Truesight:10:-1:
+!tj -addfav Wildshaped:1:+0:
+
+
+
+

@@ -59,13 +59,14 @@
  				should not be used lightly but if effects get stuck in the system this will clear them
 	2020-09-20 - Added EOT link to turn indicator
 	2020-09-20 - Added mouseover text to token marker selector list
+	2020-09-23 - Pulled on git to start my own branch in anticipation of more heavy modification
 
 ************************************************************************************/
 
 var statusMarkers = [];
 var TrackerJacker = (function() {
 	'use strict';
-	var version = 1.081,
+	var version = 1.20,
 		author = 'Ken L.',
 		pending = null;
 

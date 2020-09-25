@@ -60,7 +60,8 @@
 	2020-09-20 - Added EOT link to turn indicator
 	2020-09-20 - Added mouseover text to token marker selector list
 	2020-09-23 - Pulled on git to start my own branch in anticipation of more heavy modification
-
+	2020-09-25 - Added the ability to display favorites alphabetically, it remains in the first in first out order by default.
+				To get an alphabetical list change `!tj -listfavs` to `!tj -listfavs 1`
 ************************************************************************************/
 
 var statusMarkers = [];
@@ -955,12 +956,19 @@ var TrackerJacker = (function() {
 	 * Build a listing of favorites with buttons that allow them
 	 * to be applied to a selection.
 	 */
-	var makeFavoriteConfig = function() {
+	var makeFavoriteConfig = function(args) {
+		var wantSorted = args[0];
+
 		var midcontent = '',
 			content = '',
 			markerdef;
 
-		_.each(state.trackerjacker.favs,function(e) {
+		var sorted = state.trackerjacker.favs;
+		if(wantSorted && wantSorted != 0 && wantSorted != 'false') {
+			sorted = _.sortBy(sorted, 'name');
+		}
+
+		_.each(sorted, function(e) {
 			markerdef = _.findWhere(statusMarkers,{tag: e.marker});
 			midcontent +=
 				'<tr style="border-bottom: 1px solid '+design.statusbordercolor+';" >'
@@ -1559,7 +1567,6 @@ log(priororder[0].id);
 		}
 
 		// Have to strip out :: and then replace it later
-log(args);
 		args = args.replace('::', '~dc~');
 
 		args = args.split(':');
@@ -1800,8 +1807,8 @@ log(args);
 	/**
 	 * Display favorite configuration
 	 */
-	var doDisplayFavConfig = function() {
-		var content = makeFavoriteConfig();
+	var doDisplayFavConfig = function(args) {
+		var content = makeFavoriteConfig(args);
 		sendFeedback(content);
 	};
 
@@ -2942,7 +2949,9 @@ log(args);
 				args = args.replace('-dispstatusconfig','');
 				doDisplayStatusConfig(args);
 			} else if (args.indexOf('-listfav') === 0) {
-				doDisplayFavConfig();
+				args = args.replace('-listfavs', '-listfav').trim();
+				args = args.replace('-listfav', '').trim();
+				doDisplayFavConfig(args);
 			} else if (args.indexOf('-dispmultistatusconfig') === 0) {
 				args = args.replace('-dispmultistatusconfig','').trim();
 				doDisplayMultiStatusConfig(args);

@@ -67,7 +67,7 @@
 var statusMarkers = [];
 var TrackerJacker = (function() {
 	'use strict';
-	var version = 1.20,
+	var version = 1.21,
 		author = 'Ken L.',
 		pending = null;
 

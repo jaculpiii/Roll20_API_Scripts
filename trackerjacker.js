@@ -67,7 +67,7 @@
 var statusMarkers = [];
 var TrackerJacker = (function() {
 	'use strict';
-	var version = 1.20,
+	var version = 1.22,
 		author = 'Ken L.',
 		pending = null;
 
@@ -94,7 +94,9 @@ var TrackerJacker = (function() {
 		//trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/6623517/8xw1KOSSOO1WocN3KQYmzw/thumb.png?1417994946',
 		trackerImgRatio: 2.25,
 		rotation_degree: 15,
-		rotation_rate: 200, // time between rotation updates (lower number == faster rotation, likely will have negative impact on performance)
+		rotation_rate: 250, // time between rotation updates (lower number == faster rotation, likely will have negative impact on performance)
+
+		round_separator_initiative: -100, // the initiative value of the round separator, defaults to -100 to display [?Round # -100] in the turn tracker
 	};
 
 	var flags = {
@@ -418,12 +420,12 @@ var TrackerJacker = (function() {
 			{turnorder = JSON.parse(turnorder);}
 		var tracker;
 
-		if (tracker = _.find(turnorder, function(e,i) {if (parseInt(e.id) === -1 && parseInt(e.pr) === -100 && e.custom.match(/Round\s*\d+/)){return true;}})) {
+		if (tracker = _.find(turnorder, function(e,i) {if (parseInt(e.id) === -1 && parseInt(e.pr) === fields.round_separator_initiative && e.custom.match(/Round\s*\d+/)){return true;}})) {
 			// resume logic
 		} else {
 			turnorder.push({
 				id: '-1',
-				pr: '-100',
+				pr: fields.round_separator_initiative,
 				custom: 'Round 1',
 			});
 			//TODO only clear statuses that have a duration
@@ -593,7 +595,7 @@ var TrackerJacker = (function() {
 		var tracker,
 			trackerpos;
 
-		if (!!(tracker = _.find(turnorder, function(e,i) {if (parseInt(e.id) === -1 && parseInt(e.pr) === -100 && e.custom.match(/Round\s*\d+/)){trackerpos = i;return true;}}))) {
+		if (!!(tracker = _.find(turnorder, function(e,i) {if (parseInt(e.id) === -1 && parseInt(e.pr) === fields.round_separator_initiative && e.custom.match(/Round\s*\d+/)){trackerpos = i;return true;}}))) {
 
 			var indicator,
 				graphic = findTrackerGraphic(),
@@ -1182,7 +1184,7 @@ var TrackerJacker = (function() {
 	 */
 	var isTracker = function(turn) {
 		if (parseInt(turn.id) === -1
-		&& parseInt(turn.pr) === -100
+		&& parseInt(turn.pr) === fields.round_separator_initiative
 		&& turn.custom.match(/Round\s*\d+/))
 			{return true;}
 		return false;
@@ -2519,7 +2521,7 @@ log(priororder[0].id);
 			prepareTurnorder();
 		} else {
 			if(!_.find(turnorder, function(e) {
-				if (parseInt(e.id) === -1 && parseInt(e.pr) === -100 && e.custom.match(/Round\s*\d+/)) {
+				if (parseInt(e.id) === -1 && parseInt(e.pr) === fields.round_separator_initiative && e.custom.match(/Round\s*\d+/)) {
 					e.custom = 'Round ' + initial;
 					return true;
 				}

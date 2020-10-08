@@ -1553,9 +1553,50 @@ log(priororder[0].id);
 
 		delete state.trackerjacker.favs[statusName];
 		sendFeedback(content);
-
-
 	};
+
+	/**
+		Make a handout containing the commands to re-create the favorites
+	 */
+	var makeFavsHandout = function(wantSorted) {
+		var handout = createObj('handout', {
+			 name: 'TrackerJacker Favorites Macro',
+			 inplayerjournals: 'none',
+			 archived: false
+		});
+
+		var notes = '',
+		gmnotes = '',
+		markerdef;
+
+		var sorted = state.trackerjacker.favs;
+		if(wantSorted && wantSorted != 0 && wantSorted != 'false') {
+			sorted = _.sortBy(sorted, 'name');
+		}
+
+		_.each(sorted, function(e) {
+			markerdef = _.findWhere(statusMarkers,{tag: e.marker});
+			if(markerdef) {
+				var duration = '',
+				direction = '',
+				message = '';
+
+				// create the favorite
+				notes = notes +'!tj -addfav '+e.name+':'+e.duration+':'+e.direction+':'+e.msg+"<br>";
+
+				if(markerdef) {
+					// create add the marker to the favorite
+					notes = notes +'!tj -marker '+markerdef.urlName+' %% '+e.name+' %% fav<br>';
+				}
+			}
+		});
+
+		handout.set({
+			 notes: notes,
+			 gmnotes: gmnotes
+		});
+	}
+
 
 	/**
 	 * Add turn item
@@ -2840,6 +2881,13 @@ log(priororder[0].id);
 					+ '</li>'
 					+ '<br>'
 					+ '<div style="font-weight: bold;">'
+						+ '!tj -listfavs 1'
+					+ '</div>'
+					+ '<li style="padding-left: 10px;">'
+						+ 'Displays favorite statuses (in alphabetical order) with options to apply or edit.'
+					+ '</li>'
+					+ '<br>'
+					+ '<div style="font-weight: bold;">'
 						+ '!eot'
 					+ '</div>'
 					+ '<li style="padding-left: 10px;">'
@@ -2979,6 +3027,8 @@ log(priororder[0].id);
 				showHelp();
 			} else if (args.indexOf('-cleanSlate') === 0) {
 				cleanSlate();
+			} else if (args.indexOf('-makeFavsHandout') === 0) {
+				makeFavsHandout();
 			} else {
 				sendFeedback('<span style="color: red;">Invalid command " <b>'+msg.content+'</b> "</span>');
 				showHelp();

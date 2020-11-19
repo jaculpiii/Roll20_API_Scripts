@@ -89,7 +89,8 @@ var TrackerJacker = (function() {
 
 		trackerId: '',
 		trackerName: 'trackerjacker_tracker',
-
+// circling bats		trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/178886657/R7_Bg86Ug_6mJOhIdbYTYQ/thumb.png?1605652457',
+//	original				trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/11920268/i0nMbVlxQLNMiO12gW9h3g/thumb.png?1440939062',
 		trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/11920268/i0nMbVlxQLNMiO12gW9h3g/thumb.png?1440939062',
 		//trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/6623517/8xw1KOSSOO1WocN3KQYmzw/thumb.png?1417994946',
 		trackerImgRatio: 2.25,
@@ -1555,46 +1556,54 @@ log(priororder[0].id);
 		sendFeedback(content);
 	};
 
+
 	/**
-		Make a handout containing the commands to re-create the favorites
-	 */
-	var makeFavsHandout = function(wantSorted) {
+		Make a handout containing the JSON to re-create the favorites
+	**/
+	var saveFavs = function(wantSorted) {
 		var handout = createObj('handout', {
-			 name: 'TrackerJacker Favorites Macro',
+			 name: 'TJFavsJSON',
 			 inplayerjournals: 'none',
-			 archived: false
+			 archived: false,
 		});
 
 		var notes = '',
 		gmnotes = '',
 		markerdef;
-
+/*
 		var sorted = state.trackerjacker.favs;
 		if(wantSorted && wantSorted != 0 && wantSorted != 'false') {
 			sorted = _.sortBy(sorted, 'name');
 		}
 
-		_.each(sorted, function(e) {
-			markerdef = _.findWhere(statusMarkers,{tag: e.marker});
-			if(markerdef) {
-				var duration = '',
-				direction = '',
-				message = '';
+		gmnotes = JSON.stringify(sorted);
+*/
+		gmnotes = JSON.stringify(state.trackerjacker.favs);
+		notes = "Copy this handout to another lobby using the transmogrifier or copy the GM notes section in it's entirety and paste into a handout in the other lobby of the exact same name as this one.  Then run '!tj loadFavs' in the new lobby with TrackerJacker loaded in the APIs.";
 
-				// create the favorite
-				notes = notes +'!tj -addfav '+e.name+':'+e.duration+':'+e.direction+':'+e.msg+"<br>";
-
-				if(markerdef) {
-					// create add the marker to the favorite
-					notes = notes +'!tj -marker '+markerdef.urlName+' %% '+e.name+' %% fav<br>';
-				}
-			}
+		handout.set({
+			 notes: notes
 		});
 
 		handout.set({
-			 notes: notes,
 			 gmnotes: gmnotes
 		});
+
+	}
+
+
+	/**
+		Read the handout "TrackerJacker Favorites JSON" if it exists and create favorites list from it
+	**/
+	var loadFavs = function() {
+		var handouts = findObjs({type: 'handout', name: 'TJFavsJSON'});
+		var handout = handouts[0];
+
+		handout.get("gmnotes", function(gmnotes) {
+			state.trackerjacker.favs = JSON.parse(gmnotes);
+		});
+
+		sendFeedback('Favorites loaded from handout "TJFavsJSON"');
 	}
 
 
@@ -2893,6 +2902,20 @@ log(priororder[0].id);
 					+ '<li style="padding-left: 10px;">'
 						+ 'Ends a player\'s turn and advances the tracker if the player has control of the current turn\'s token. Player usable command.'
 					+ '</li>'
+					+ '<br>'
+					+ '<div style="font-weight: bold;">'
+						+ '!tj -saveFavs'
+					+ '</div>'
+					+ '<li style="padding-left: 10px;">'
+						+ 'Save your current Favorites into in the GM notes section of a handout called "TJFavsJSON".  This can be copy/pasted into a handout with the same name in another lobby and then "!tj -loadFavs" can be run to load them there.'
+					+ '</li>'
+					+ '<br>'
+					+ '<div style="font-weight: bold;">'
+						+ '!tj -loadFavs'
+					+ '</div>'
+					+ '<li style="padding-left: 10px;">'
+						+ 'Load Favorites previously saved via "!tj -saveFavs".  Requires the handout "TJFavsJSON" to exist and have properly exported data in the GM notes section.'
+					+ '</li>'
 				+ '</div>'
    			+ '</div>';
 
@@ -3027,8 +3050,10 @@ log(priororder[0].id);
 				showHelp();
 			} else if (args.indexOf('-cleanSlate') === 0) {
 				cleanSlate();
-			} else if (args.indexOf('-makeFavsHandout') === 0) {
-				makeFavsHandout();
+			} else if (args.indexOf('-saveFavs') === 0) {
+				saveFavs();
+			} else if (args.indexOf('-loadFavs') === 0) {
+				loadFavs();
 			} else {
 				sendFeedback('<span style="color: red;">Invalid command " <b>'+msg.content+'</b> "</span>');
 				showHelp();

@@ -67,11 +67,7 @@
 var statusMarkers = [];
 var TrackerJacker = (function() {
 	'use strict';
-<<<<<<< HEAD
-	var version = 1.21,
-=======
 	var version = 1.22,
->>>>>>> dev
 		author = 'Ken L.',
 		pending = null;
 
@@ -1571,19 +1567,8 @@ log(priororder[0].id);
 			 archived: false,
 		});
 
-		var notes = '',
-		gmnotes = '',
-		markerdef;
-/*
-		var sorted = state.trackerjacker.favs;
-		if(wantSorted && wantSorted != 0 && wantSorted != 'false') {
-			sorted = _.sortBy(sorted, 'name');
-		}
-
-		gmnotes = JSON.stringify(sorted);
-*/
-		gmnotes = JSON.stringify(state.trackerjacker.favs);
-		notes = "Copy this handout to another lobby using the transmogrifier or copy the GM notes section in it's entirety and paste into a handout in the other lobby of the exact same name as this one.  Then run '!tj loadFavs' in the new lobby with TrackerJacker loaded in the APIs.";
+		var gmnotes = JSON.stringify(state.trackerjacker.favs);
+		var notes = "Copy this handout to another lobby using the transmogrifier or copy the GM notes section in it's entirety and paste into a handout in the other lobby of the exact same name as this one.  Then run '!tj loadFavs' in the new lobby with TrackerJacker loaded in the APIs.";
 
 		handout.set({
 			 notes: notes

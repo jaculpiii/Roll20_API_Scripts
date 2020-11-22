@@ -48,26 +48,18 @@
  */
 
 /************************************************************************************
- 	Modified 9/11/2020
+ 	Forked from Ken L. 9/11/2020
  	By James A Culp III
  	aka Chuz@6906 on Discord
 
- 	Change Log
- 	2020-09-12 - Updated heavily to pull all token markers enabled in the campaign and make them useable
- 				for condition/status effects
- 	2020-09-12 - Added -cleanSlate command (!tj -cleanSlate) to completely wipe all persistent state data
- 				should not be used lightly but if effects get stuck in the system this will clear them
-	2020-09-20 - Added EOT link to turn indicator
-	2020-09-20 - Added mouseover text to token marker selector list
-	2020-09-23 - Pulled on git to start my own branch in anticipation of more heavy modification
-	2020-09-25 - Added the ability to display favorites alphabetically, it remains in the first in first out order by default.
-				To get an alphabetical list change `!tj -listfavs` to `!tj -listfavs 1`
+	Git Repository: https://github.com/jaculpiii/Roll20_API_Scripts
+ 	Changes detailed in README.md
 ************************************************************************************/
 
 var statusMarkers = [];
 var TrackerJacker = (function() {
 	'use strict';
-	var version = 1.22,
+	var version = 1.23,
 		author = 'Ken L.',
 		pending = null;
 
@@ -2678,6 +2670,8 @@ log(priororder[0].id);
 				}
 			}, fields.rotation_rate);
 		}
+
+		announceTurn(curToken, {public: '', hidden: ''});
 
 		updateTurnorderMarker();
 		if (!flags.animating) {

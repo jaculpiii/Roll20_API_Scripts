@@ -14,7 +14,8 @@ An attempt to modernize Tracker Jacker and add new functionality as it becomes d
 
 
 
-**Commands**  
+**Commands:**  
+  
 ***`!tj -help`***
 Display help message
   

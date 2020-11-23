@@ -16,4 +16,7 @@ Things to add/fix
 * Link conditions to a parent condition on another token (specifically for things like "blessed" linked to "concentration" and the like)  
 * Add clickable on Turn Notification marker list to remove each marker.  Perhaps where the duration is currently displayed and bump duration to the left a little.  
 
-  
+
+**Feature Requests**
+* Make EOT button hideable
+* Allow the default initiative value (normally -100) configurable

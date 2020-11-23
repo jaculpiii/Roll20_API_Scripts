@@ -78,19 +78,17 @@ var TrackerJacker = (function() {
 	var fields = {
 		feedbackName: 'TrackerJacker',
 		feedbackImg: 'https://s3.amazonaws.com/files.d20.io/images/11514664/jfQMTRqrT75QfmaD98BQMQ/thumb.png?1439491849',
-
 		trackerId: '',
 		trackerName: 'trackerjacker_tracker',
-// circling bats		trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/178886657/R7_Bg86Ug_6mJOhIdbYTYQ/thumb.png?1605652457',
-//	original				trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/11920268/i0nMbVlxQLNMiO12gW9h3g/thumb.png?1440939062',
 		trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/11920268/i0nMbVlxQLNMiO12gW9h3g/thumb.png?1440939062',
-		//trackerImg: 'https://s3.amazonaws.com/files.d20.io/images/6623517/8xw1KOSSOO1WocN3KQYmzw/thumb.png?1417994946',
 		trackerImgRatio: 2.25,
 		rotation_degree: 15,
 		rotation_rate: 250, // time between rotation updates (lower number == faster rotation, likely will have negative impact on performance)
 
 		round_separator_initiative: -100, // the initiative value of the round separator, defaults to -100 to display [?Round # -100] in the turn tracker
 	};
+
+	fields.defaultTrackerImg = fields.trackerImg;
 
 	var flags = {
 		tj_state: TJ_StateEnum.STOPPED, image: true,
@@ -269,6 +267,42 @@ var TrackerJacker = (function() {
 		state.trackerjacker.effects = {};
 		state.trackerjacker.statuses = [];
 		state.trackerjacker.favs = {};
+	}
+
+
+	/**
+	 * Set a new tracker image
+	 */
+	var setIndicatorImage = function() {
+		var oldImgs = findObjs({ type: 'graphic', _id: fields.trackerId });
+		if(oldImgs[0]) {
+			oldImgs[0].remove();
+		}
+
+		var imgs = findObjs({ type: 'graphic', name: 'tracker_image' });
+		if(imgs[0]) {
+			fields.trackerImg = imgs[0].get('imgsrc').replace("max", "thumb").replace("med", "thumb");
+			fields.trackerId = imgs[0].get('_id');
+			imgs[0].remove();
+			sendFeedback('Tracker Indicator Image Updated');
+		} else {
+			sendFeedback('No token named "tracker_image", keeping previously set image.');
+		}
+	}
+
+
+	/**
+	 * Reset the tracker image to the default
+	 */
+	var defaultIndicatorImage = function() {
+		var imgs = findObjs({ type: 'graphic', _id: fields.trackerId });
+
+		_.each(imgs, function(e) {
+			e.remove();
+		});
+
+		fields.trackerImg = fields.defaultTrackerImg;
+		sendFeedback('Token Indicator reset to default');
 	}
 
 
@@ -1197,13 +1231,13 @@ var TrackerJacker = (function() {
 			return graphic;
 		} else {
 			// we find the graphic
-			var cannidates = findObjs({
+			var candidates = findObjs({
 				_pageid: pageid,
 				_type: 'graphic',
 				name: fields.trackerName,
 			});
-			if (cannidates && cannidates[0]) {
-				graphic = cannidates[0];
+			if (candidates && candidates[0]) {
+				graphic = candidates[0];
 				fields.trackerId = graphic.get('_id');
 				return graphic;
 			} else {
@@ -1218,6 +1252,7 @@ var TrackerJacker = (function() {
 					width: 70,
 					height: 70,
 				});
+
 				fields.trackerId = graphic.get('_id');
 				return graphic;
 			}
@@ -1296,18 +1331,10 @@ var TrackerJacker = (function() {
 				currentTurn = turnorder[0];
 				updateTurnorderMarker(turnorder);
 			}
-log('if currentTurn.id && priororder[0].id');
-log('currentTurn.id');
-log(currentTurn.id);
-log('priororder');
-log(priororder);
+
 			if (currentTurn.id !== -1
 				&& priororder
 				&& priororder[0].id !== currentTurn.id) {
-log('currentTurn.id');
-log(currentTurn.id);
-log('priororder[0].id');
-log(priororder[0].id);
 					var graphic,
 						curToken = getObj('graphic',currentTurn.id),
 						priorToken = getObj('graphic',priororder[0].id),
@@ -2910,6 +2937,34 @@ log(priororder[0].id);
 					+ '<li style="padding-left: 10px;">'
 						+ 'Load Favorites previously saved via "!tj -saveFavs".  Requires the handout "TJFavsJSON" to exist and have properly exported data in the GM notes section.'
 					+ '</li>'
+
+					+ '<br>'
+					+ '<div style="font-weight: bold;">'
+						+ '!tj -setIndicatorImage'
+					+ '</div>'
+					+ '<li style="padding-left: 10px;">'
+						+ 'Replaces the current initiative indicator with a new image'
+						+ '<ol>'
+							+ '<li>Place the image you wish to use as the indicator image (animated turn indicator) on the play field (any layer).  Please note, rollable tokens can be used for this as well.</li>'
+							+ "<li>Edit the new token and change it's name to 'tracker_image', save the change</li>"
+							+ "<li>Pause the tracker if it's currently active</li>"
+							+ '<li>Use this command</li>'
+							+ '<li>Unpause the tracker if it was active, else wise the next time the tracker is started your new indicator will be used.</li>'
+						+ '</ol>'
+						+ 'Note: The token will be removed from the field, along with any others with the name "tracker_image"'
+					+ '</li>'
+					+ '<br>'
+					+ '<div style="font-weight: bold;">'
+						+ '!tj -defaultIndicatorImage'
+					+ '</div>'
+					+ '<li style="padding-left: 10px;">'
+						+ 'Revert the initiative indicator to the original green one.'
+						+ '<ol>'
+							+ "<li>Pause the tracker if it's currently active</li>"
+							+ '<li>Use this command</li>'
+							+ '<li>Unpause the tracker if it was active, elsewise the next time the tracker is started the indicator will be the default green one.</li>'
+						+ '</ol>'
+					+ '</li>'
 				+ '</div>'
    			+ '</div>';
 
@@ -3048,6 +3103,10 @@ log(priororder[0].id);
 				saveFavs();
 			} else if (args.indexOf('-loadFavs') === 0) {
 				loadFavs();
+			} else if (args.indexOf('-setIndicatorImage') === 0) {
+				setIndicatorImage();
+			} else if (args.indexOf('-defaultIndicatorImage') === 0) {
+				defaultIndicatorImage();
 			} else {
 				sendFeedback('<span style="color: red;">Invalid command " <b>'+msg.content+'</b> "</span>');
 				showHelp();
